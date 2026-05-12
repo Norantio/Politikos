@@ -1,7 +1,9 @@
-// Tiny fetch wrapper. Base = "/api" (politikos-web nginx proxies /api → api:8090).
-// In dev (vite), set VITE_API_BASE=http://localhost:8090/api and Vite passes through.
+// Tiny fetch wrapper. Default base = `${BASE_URL}api` so it works whether
+// the app is served from "/" or "/apps/politikos/" (Flotilla gateway).
+// In dev (vite), set VITE_API_BASE=http://localhost:8090/api to bypass.
 
-const BASE = (import.meta.env.VITE_API_BASE as string | undefined) ?? "/api";
+const BASE = (import.meta.env.VITE_API_BASE as string | undefined)
+  ?? ((import.meta.env.BASE_URL ?? "/").replace(/\/$/, "") + "/api");
 
 async function get<T>(path: string, params?: Record<string, string | number | boolean | undefined>): Promise<T> {
   const url = new URL(BASE + path, window.location.origin);
