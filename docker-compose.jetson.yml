@@ -1,0 +1,23 @@
+# Jetson production overlay — used with the Flotilla launcher.
+# Run with:
+#   docker compose -f docker-compose.yml -f docker-compose.jetson.yml up -d
+#
+# Web is path-mounted at /apps/politikos/ behind Flotilla's nginx + Authelia.
+# Both api and web join the external `flotilla` network so nginx can proxy them.
+
+services:
+  api:
+    networks:
+      - default
+      - flotilla
+    ports: !reset []   # don't expose; nginx proxies internally
+
+  web:
+    networks:
+      - default
+      - flotilla
+    ports: !reset []
+
+networks:
+  flotilla:
+    external: true
