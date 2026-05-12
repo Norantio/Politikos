@@ -201,3 +201,64 @@ h1 { margin: 0 0 4px; font-size: 22px; }
   margin-right: 6px;
 }
 @keyframes spin { to { transform: rotate(360deg); } }
+
+/* Map views */
+.map-wrap {
+  background: var(--bg-elev);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px;
+  position: relative;
+}
+.map-tooltip {
+  position: absolute;
+  bottom: 12px;
+  left: 16px;
+  background: rgba(11, 16, 32, 0.85);
+  color: var(--text);
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 12px;
+  pointer-events: none;
+}
+.state-grid {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 16px;
+  align-items: start;
+}
+@media (max-width: 900px) {
+  .state-grid { grid-template-columns: 1fr; }
+}
+.county-list {
+  background: var(--bg-elev);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  max-height: 460px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+.county-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  background: none;
+  border: 0;
+  border-bottom: 1px solid var(--border);
+  color: var(--text);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.county-item:last-child { border-bottom: 0; }
+.county-item:hover { background: var(--bg-elev-2); }
+.county-item.active { background: var(--bg-elev-2); border-left: 3px solid var(--accent-2); padding-left: 9px; }
+.county-count {
+  color: var(--text-dim);
+  font-size: 12px;
+  background: var(--bg);
+  padding: 2px 8px;
+  border-radius: 999px;
+}

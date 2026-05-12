@@ -63,13 +63,21 @@ export interface CalendarResponse {
   dates?: CalendarEntry[];
   [k: string]: unknown;
 }
+export interface RegionEntry { name: string; count: number }
+export interface RegionsResponse {
+  province: string | null;
+  districts: RegionEntry[];
+  municipalities: RegionEntry[];
+}
 
 export const api = {
-  listRaces: (q: { province?: string; office?: string; scope?: string; election_date?: string; active_only?: boolean; limit?: number; offset?: number } = {}) =>
+  listRaces: (q: { province?: string; district?: string; municipality?: string; q?: string; office?: string; scope?: string; election_date?: string; active_only?: boolean; limit?: number; offset?: number } = {}) =>
     get<RacesResponse>("/races", q),
   getRace: (id: string) => get<Race>(`/races/${encodeURIComponent(id)}`),
   feed: (q: { kind?: string; province?: string; limit?: number; offset?: number } = {}) =>
     get<FeedResponse>("/feed", q),
   calendar: (q: { year?: number; province?: string } = {}) =>
     get<CalendarResponse>("/calendar", q),
+  regions: (q: { province?: string } = {}) =>
+    get<RegionsResponse>("/regions", q),
 };

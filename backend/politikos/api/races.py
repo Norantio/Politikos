@@ -4,6 +4,7 @@ from datetime import datetime, timezone
 from typing import Any
 
 from fastapi import APIRouter, HTTPException, Query, Request
+from sqlalchemy import or_
 from sqlmodel import desc, select
 
 from ..db.models import RaceCache, Snapshot
@@ -38,6 +39,9 @@ def _serialize(rc: RaceCache) -> dict[str, Any]:
 @router.get("")
 async def list_races(
     province: str | None = Query(None, description="USPS state code, e.g. FL"),
+    district: str | None = Query(None, description="District/county filter (exact)"),
+    municipality: str | None = Query(None, description="Municipality filter (exact)"),
+    q: str | None = Query(None, description="Free-text search across name/office/district/municipality"),
     office: str | None = Query(None, description="Office filter, e.g. 'Sheriff'"),
     scope: str | None = Query(None, description="'Primary' or 'Statewide'"),
     election_date: str | None = Query(None, description="ISO date, exact match"),
@@ -49,6 +53,18 @@ async def list_races(
         stmt = select(RaceCache)
         if province:
             stmt = stmt.where(RaceCache.province == province.upper())
+        if district:
+            stmt = stmt.where(RaceCache.district == district)
+        if municipality:
+            stmt = stmt.where(RaceCache.municipality == municipality)
+        if q:
+            like = f"%{q}%"
+            stmt = stmt.where(or_(
+                RaceCache.election_name.ilike(like),
+                RaceCache.office.ilike(like),
+                RaceCache.district.ilike(like),
+                RaceCache.municipality.ilike(like),
+            ))
         if office:
             stmt = stmt.where(RaceCache.office == office)
         if scope:

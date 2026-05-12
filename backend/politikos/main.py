@@ -6,6 +6,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from .api import feed as feed_router
 from .api import races as races_router
+from .api import regions as regions_router
 from .api import ws as ws_router
 from .config import settings
 from .db.session import init_db
@@ -50,5 +51,6 @@ def healthz() -> dict[str, str]:
 
 
 app.include_router(races_router.router, prefix="/api")
+app.include_router(regions_router.router, prefix="/api")
 app.include_router(feed_router.router, prefix="/api")
 app.include_router(ws_router.router)
